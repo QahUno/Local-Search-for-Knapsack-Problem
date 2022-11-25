@@ -37,9 +37,9 @@ def evaluate(x, values, weights, maxWeight, n):
     if totalWeight > maxWeight:
         return [-1, -1]
 
-    return [totalvalues, totalWeight]   # returns a list of both total values and total weight
+    return [totalvalues, totalWeight]   # return a list of both total values and total weight
           
-# returns all neighbors of a given solution x
+# return all neighbors of a given solution x
 def neighborhood(x, n):     
     nbhood = []     
     for i in range(0, n):
@@ -72,10 +72,7 @@ def initial_solution(n, classes, classItems, weights):
     for i in minIndex:
         res[i] = 1
     return res
-    # return [0] * n
-    
-# print(initial_solution(10, 2, [1, 1, 2, 1, 2, 1, 1, 2, 2, 2], [85, 26, 48, 21, 22, 95, 43, 45, 55, 52]))
-
+   
 def local_beam_search():
     # intilialization 
     n = len(values)
@@ -93,9 +90,9 @@ def local_beam_search():
         for t in nbhood:
             t.extend(evaluate(t, values, weights, maxWeight, n))
         for t in nbhood:
-            if t[n + 1] > maxWeight or not checkClass(t, classes, n, classItems): # validate weight
+            if t[n + 1] > maxWeight or not checkClass(t, classes, n, classItems): # validate weight and check class
                 nbhood.remove(t)
-        nbhood = sorted(nbhood, key=itemgetter(n), reverse=True) # choose best bw neighbors
+        nbhood = sorted(nbhood, key=itemgetter(n), reverse=True) # choose bw of best neighbors
         nbhood = nbhood[0:bw]
         if nbhood[0][n] <= expanded[0][n]: # stop condition
             # display  
