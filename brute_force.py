@@ -35,7 +35,7 @@ def bruteForceKnapsack():
             totalW += int(wList[i])
             if (cList[i] not in totalC):
                 totalC.append(cList[i])
-        if totalW <= W and len(totalC)==m:
+        if totalW <= W:
             legalSubset.append(subset)
 
     # print(legalSubset)

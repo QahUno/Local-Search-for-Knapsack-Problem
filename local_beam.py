@@ -107,11 +107,11 @@ def local_beam_search():
 
 if __name__=="__main__":
     for i in range(5):
-        fin = 'input/INPUT_'+str(i)+'.txt'
-        fout= 'output/local_beam_search/OUTPUT_'+str(i)+'.txt'
+        # fin = 'input/INPUT_'+str(i)+'.txt'
+        # fout= 'output/local_beam_search/OUTPUT_'+str(i)+'.txt'
 
-        # fin = 'large_input/INPUT_'+str(i)+'.txt'
-        # fout= 'large_output/local_beam_search/OUTPUT_'+str(i)+'.txt'
+        fin = 'large_input/INPUT_'+str(i)+'.txt'
+        fout= 'large_output/local_beam_search/OUTPUT_'+str(i)+'.txt'
 
         data = tc.use_testcase(fin)
         # data = tc.use_testcase('large_input/INPUT_'+str(i)+'.txt')
