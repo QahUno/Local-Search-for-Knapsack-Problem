@@ -10,7 +10,7 @@ values = []
 classes = []
 
 
-POPULATION_SIZE = 6
+POPULATION_SIZE = 5
 INDIVIDUAL_SIZE = 0
 population = []
 fitness = [0 for i in range(POPULATION_SIZE)]
@@ -151,24 +151,13 @@ def evaluation(algo, times):
         solutions.append(res[0])
     return (list(range(times)), solutions)
 
-def draw_graph(x, y):
-    plt.plot(x, y)
-    plt.xlabel('Generation')
-    # frequency label
-    plt.ylabel('Fitness')
-    # plot title
-    plt.title('Genetic Algorithm')
-    
-    # function to show the plot
-    plt.show()
-
 if __name__=="__main__":
     for i in range(5):
-        # fin = 'input/INPUT_'+str(i)+'.txt'
-        # fout= 'output/genetic_algorithm/OUTPUT_'+str(i)+'.txt'
+        fin = 'input/INPUT_'+str(i)+'.txt'
+        fout= 'output/genetic_algorithm/OUTPUT_'+str(i)+'.txt'
 
-        fin = 'large_input/INPUT_'+str(i)+'.txt'
-        fout= 'large_output/genetic_algorithm/OUTPUT_'+str(i)+'.txt'
+        # fin = 'large_input/INPUT_'+str(i)+'.txt'
+        # fout= 'large_output/genetic_algorithm/OUTPUT_'+str(i)+'.txt'
 
         data = tc.use_testcase(fin)
         W = data[0]

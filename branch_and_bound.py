@@ -37,14 +37,15 @@ def get_bound(node):
         return result
 
 
-def checkClass(node):
+def checkClass(items):
+    global c
     lst_classes = [0 for i in range(C)]
-    for i in range(len(node.items)):
-        if node.items[i]:
-            lst_classes[node.clas[i]-1] = 1
+    for i in range(n):
+        if items[i]:
+            lst_classes[c[i]-1] = 1
 
-    for c in lst_classes:
-        if c == 0:
+    for cls in lst_classes:
+        if cls == 0:
             return False
     
     return True
@@ -84,15 +85,13 @@ def branch_and_bound():
         if t.level == n-1:
             continue
 
-        # print(t.bound)
-        # time.sleep(1)
         u.level = t.level + 1
         u.value = t.value + v[u.level]
         u.weight = t.weight + w[u.level]
         u.items = t.items.copy()
         u.items[save_index[u.level]] = 1
 
-        if u.weight <= W and u.value > max_profit:
+        if u.weight <= W and u.value > max_profit and checkClass(u.items):
             max_profit = u.value
             max_weight = u.weight
             max_items = u.items.copy()
@@ -115,8 +114,7 @@ def branch_and_bound():
     return (max_weight, max_profit, max_items)
 
 if __name__ == '__main__':
-    # for i in range(5):
-        i = 0
+    for i in range(5):
         fin = 'input/INPUT_'+str(i)+'.txt'
         fout= 'output/branch_and_bound/OUTPUT_'+str(i)+'.txt'
 
@@ -135,5 +133,4 @@ if __name__ == '__main__':
         rerange()
 
         tc.time_operation(branch_and_bound, fin, n, C, W, fout)
-    
-# Solution:  [0, 0, 1, 1, 1, 0, 1, 0, 0, 0]
+
