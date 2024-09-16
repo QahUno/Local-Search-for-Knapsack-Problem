@@ -35,7 +35,7 @@ def bruteForceKnapsack():
             totalW += int(wList[i])
             if (cList[i] not in totalC):
                 totalC.append(cList[i])
-        if totalW <= W and len(totalC)==m:
+        if totalW <= W and len(totalC) == m:
             legalSubset.append(subset)
 
     # print(legalSubset)
@@ -75,12 +75,3 @@ if __name__=="__main__":
         tc.time_operation(bruteForceKnapsack, 'input/INPUT_'+str(i)+'.txt', 
                             len(wList), m, W, 'output/brute_force/OUTPUT_'+str(i)+'.txt')   
         
-    
-
-# for i in range(1,6):
-#     pathIn = "largeInput/INPUT_" + str(i) + ".txt" 
-#     pathOut = "largeOutput/OUTPUT_" + str(i) + ".txt"
-#     bruteForceKnapsack(pathIn,pathOut)   
-
-
-# print(datetime.now() - startTime)

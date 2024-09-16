@@ -1,40 +1,22 @@
 import test_case as tc
+import numpy as np
+import time 
 
 n = 0
 W = 0
+C = 0
 w = []
 v = []
-
+c = []
+save_index = []
 values_per_weight = []
-
-
-class Priority_Queue:
-    def __init__(self):
-        self.pqueue = []
-        self.length = 0
-    
-    def insert(self, node):
-        for i in self.pqueue:
-            get_bound(i)
-        i = 0
-        while i < len(self.pqueue):
-            if self.pqueue[i].bound > node.bound:
-                break
-            i+=1
-        self.pqueue.insert(i,node)
-        self.length += 1
-                    
-    def remove(self):
-            result = self.pqueue.pop()
-            self.length -= 1
-            return result
         
 class Node:
     def __init__(self, level, value, weight):
         self.level = level
         self.value = value
         self.weight = weight
-        self.items = []
+        self.items = [0 for i in range(n)]
         
             
 def get_bound(node):
@@ -44,58 +26,92 @@ def get_bound(node):
         result = node.value
         next_level = node.level + 1
         totweight = node.weight
-        while next_level <= n-1 and totweight + w[next_level] <= W:
+        while (next_level <= n-1) and (totweight + w[next_level] <= W ):
             totweight = totweight + w[next_level]
             result = result + v[next_level]
             next_level+=1
+
         k = next_level
         if k<=n-1:
-            result = result + (W - totweight) * values_per_weight[k]
+            result = result + (W - totweight) * (v[k] // w[k])
         return result
 
+
+def checkClass(items):
+    global c
+    lst_classes = [0 for i in range(C)]
+    for i in range(n):
+        if items[i]:
+            lst_classes[c[i]-1] = 1
+
+    for cls in lst_classes:
+        if cls == 0:
+            return False
+    
+    return True
+
+def rerange():
+    global v, w, c, values_per_weight, save_index
+    l = []
+    for i in range(len(w)):
+        l.append(v[i] / w[i])
+    save_index = np.argsort(l).tolist()
+    save_index.reverse()
+    new_w = []
+    new_v = []
+    for i in save_index:
+        new_w.append(w[i])
+        new_v.append(v[i])
+    w = new_w.copy()
+    v = new_v.copy()
+
 def branch_and_bound():
-    pq = Priority_Queue()
+    pq = []
 
     t = Node(-1, 0, 0)
     max_profit = 0
-    t.bound = get_bound(t)
     max_weight = 0
+    max_items = []
+    t.bound = get_bound(t)
 
-    pq.insert(t)
+    pq.append(t)
 
-    while pq.length != 0:
+    while len(pq) != 0:
+        t = pq.pop()
+        u = Node(0, 0, 0)
+        if t.level == -1:
+            u.level = 0
+
+        if t.level == n-1:
+            continue
+
+        u.level = t.level + 1
+        u.value = t.value + v[u.level]
+        u.weight = t.weight + w[u.level]
+        u.items = t.items.copy()
+        u.items[save_index[u.level]] = 1
+
+        if u.weight <= W and u.value > max_profit and checkClass(u.items):
+            max_profit = u.value
+            max_weight = u.weight
+            max_items = u.items.copy()
+
+        u.bound = get_bound(u)
         
-        t = pq.remove()
-
-        if t.bound > max_profit:
-            u = Node(0, 0, 0)
-            u.level = t.level + 1
-            u.value = t.value + v[u.level]
-            u.weight = t.weight + w[u.level]
-            u.items = t.items.copy()
-
-            if u.weight <= W and u.value > max_profit: 
-                max_profit = u.value
-                max_weight = u.weight
-                u.items.append(1)
-
-            u.bound = get_bound(u)
+        if u.bound > max_profit:
+            pq.append(u)
             
-            if u.bound > max_profit:
-                pq.insert(u)
-                u.items.append(1)
-                
-            with_out = Node(u.level, t.value, t.weight)
-            with_out.bound = get_bound(with_out)
-            with_out.items = t.items.copy()
+        with_out = Node(u.level, t.value, t.weight)
+        with_out.bound = get_bound(with_out)
+        with_out.items = t.items.copy()
+        with_out.items[save_index[with_out.level]] = 0
 
 
-            if with_out.bound > max_profit:
-                pq.insert(with_out)
-                with_out.items.append(0)
+        if with_out.bound > max_profit:
+            pq.append(with_out)
 
                 
-    return (max_weight, max_profit, u.items)
+    return (max_weight, max_profit, max_items)
 
 if __name__ == '__main__':
     for i in range(5):
@@ -110,7 +126,11 @@ if __name__ == '__main__':
         w = data[2]
         v = data[3]
         c = data[4]
-        n = len(w)  
+        n = len(w)
         for j in range(n):
-            values_per_weight.append(w[j] / v[j])
+            values_per_weight.append(v[j] / w[j])
+
+        rerange()
+
         tc.time_operation(branch_and_bound, fin, n, C, W, fout)
+
